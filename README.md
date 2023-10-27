@@ -7,7 +7,8 @@ WARNING: Do not use the 3.3V supply from the MCU board if it cant supply at leas
 
 WARNING: Tx+/Tx- pins are a differential pair. Most SFP modules require a differential voltage of 0.2V-0.5V on these pins (see Datasheet of your SFP module). For low speeds (up to about 50kHz) you can use a voltage divider. The correct way is to use a single ended to differntial converter. Do not use 3.3V from IO pins directly !
 <br>
-
+<br>
+<br>
 
 | Function      | SFP Module Pin| Esp32-S2 Pin |
 | ------------- | ------------- | ------------ |

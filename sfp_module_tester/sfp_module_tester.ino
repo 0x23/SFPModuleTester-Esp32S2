@@ -10,7 +10,7 @@
 #define I2C_ADDRESS_DOM 0x51    // Digital Optical Monitoring
 
 /**
- * Pin Assignment
+ * Pin Assignment (for Wemos-S2 mini - ESP32-S2)
  *
  * WARNING: Do not use the 3.3V supply from the MCU board if it cant supply at least 500mA current (Wemos S2 mini can not!). 
  *          Also use Caps to filter 3.3V supply for SFP module.
@@ -41,6 +41,11 @@ const int PIN_TX1 = 16;
 const int PIN_TX2 = 17;
 
 const int PIN_LED = 15;
+
+//*** GLOBALS *****************************************************************
+
+dedic_gpio_bundle_handle_t tx_pin_bundle;
+volatile int next_tx_output = 1;
 
 //*** FUNCTIONS ***************************************************************
 
@@ -94,17 +99,17 @@ uint8_t read_module_register(uint8_t device_adress, uint8_t register_address) {
   return data;
 }
 
-//*** MAIN ********************************************************************
-
-dedic_gpio_bundle_handle_t tx_pin_bundle;
-
-volatile int next_tx_output = 1;
-
+/**
+ * interrupt for toggeling tx pins
+ */
 void IRAM_ATTR tx_pin_timer() {
   dedic_gpio_bundle_write(tx_pin_bundle, 255, next_tx_output);
   next_tx_output = 3-next_tx_output;  // toggle between 1 and 2
 }
 
+/**
+ * setup gpio bundle and toggle timer for Tx testing
+ */
 void setup_tx() {
   // configure pins for differential output to TX 
   int pin_list[] = {PIN_TX1, PIN_TX2};
@@ -120,6 +125,9 @@ void setup_tx() {
   digitalWrite(PIN_TX_DISABLE, false);
 }
 
+/**
+ * prints all 127 bytes of the module info to serial interface
+ */
 void print_mod_def_info(int i2c_address) {
   Serial.println("Reading MOD-DEF registers:");
   for(uint8_t i=0; i<128; i++) {
@@ -130,6 +138,8 @@ void print_mod_def_info(int i2c_address) {
     Serial.println(v, HEX);
   }
 }
+
+//*** MAIN ********************************************************************
 
 void setup() {
   pinMode(PIN_IC2_SDA, INPUT_PULLUP);
@@ -151,14 +161,8 @@ void setup() {
 }
 
 void loop() {
+  // light on boar LED whe signal loss is false
   delay(10);
   bool signal_loss = digitalRead(PIN_SIGNAL_LOSS);
   digitalWrite(PIN_LED, signal_loss==false);
-
-  //digitalWrite(PIN_TX_DISABLE, false);
-  //delay(1000); // Delay for 1 second
-  //bool signal_loss = digitalRead(PIN_SIGNAL_LOSS);
-
-  //Serial.print("signal loss: ");
-  //Serial.println(signal_loss);
 }

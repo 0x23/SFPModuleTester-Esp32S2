@@ -2,8 +2,8 @@
 Small project to interface with SFP modules for fiber optic communications using an esp32-s2 microcontroller board (Wemos S2 mini). Reads module info and sends simple test bitstream.
 
 <div style="display: flex;">
-    <img src="images/wemos_s2_mini.jpg" alt="Image of Wemos S2 mini mcu board" width="300">
-    <img src="images/sfp_module_pinout.png" alt="" width="300">
+    <img src="images/wemos_s2_mini.jpg" alt="Image of Wemos S2 mini mcu board" height="300">
+    <img src="images/sfp_module_pinout.png" alt="" height="300">
 </div>
 
 

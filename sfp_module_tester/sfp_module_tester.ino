@@ -1,11 +1,37 @@
+//*****************************************************************************
+
 #include "esp_system.h"
 #include <Wire.h>
 #include "driver/dedic_gpio.h"
 
+//*****************************************************************************
+
 #define I2C_ADDRESS_MODDEF 0x50 // Module definition 
 #define I2C_ADDRESS_DOM 0x51    // Digital Optical Monitoring
 
-const int PIN_LED = 15;
+/**
+ * Pin Assignment
+ *
+ * WARNING: Do not use the 3.3V supply from the MCU board if it cant supply at least 500mA current (Wemos S2 mini can not!). 
+ *          Also use Caps to filter 3.3V supply for SFP module.
+ * WARNING: Tx+/Tx- pins are a differential pair. Most SFP modules require a differential voltage of 0.2V-0.5V on these pins (see Datasheet of your SFP module). 
+ *          For low speeds (up to about 50kHz) you can use a voltage divider. The correct way is to use a single ended to differntial converter. 
+ *          Do not use 3.3V from IO pins directly !
+ *
+ * | Function      | SFP Module Pin| Esp32-S2 Pin |
+ * | ------------- | ------------- | ------------ |
+ * | Tx Disable    |   3           |   2          |
+ * | MOD-DEF (SDA) |   4           |   7	        |
+ * | MOD-DEF (SCL) |   5           |   6          |
+ * | Signal Loss   |   8           |   3          |
+ * | Tx+           | 18 w. divider |   16         |
+ * | Tx-           | 19 w. divider |   17         |
+ * |               |               |              |
+ * | VeeT          |   1/20/17     |   GND        |
+ * | VeeR          |   9/10/11/14  |   GND        |
+ * | VccT          |   16          |   (+3.3V)    |
+ * | VccR          |   17          |   (+3.3V)    |
+ */ 
 
 const int PIN_IC2_SDA = 7;
 const int PIN_IC2_SCL = 6;
@@ -13,6 +39,8 @@ const int PIN_TX_DISABLE = 2;
 const int PIN_SIGNAL_LOSS = 3;
 const int PIN_TX1 = 16;
 const int PIN_TX2 = 17;
+
+const int PIN_LED = 15;
 
 //*** FUNCTIONS ***************************************************************
 

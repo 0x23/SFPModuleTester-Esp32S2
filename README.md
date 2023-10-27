@@ -1,6 +1,8 @@
 # SFP-Module Tester for Esp32-S2
 Small project to interface with SFP modules for fiber optic communications using an esp32-s2 microcontroller board (Wemos S2 mini). Reads module info and sends simple test bitstream.
 
+![Image of Wemos S2 mini mcu board](images/wemos_s2_mini.jpg)
+
 # Pin Assignment
 
 WARNING: Do not use the 3.3V supply from the MCU board if it cant supply at least 500mA current (Wemos S2 mini can not!). Also use Caps to filter 3.3V supply for SFP module.
